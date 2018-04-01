@@ -7,32 +7,20 @@ const int PWMA = 11;            //speed control pin on the motor driver for the 
 
 //the left motor will be controlled by the motor B pins on the motor driver
 const int PWMB = 10;           //speed control pin on the motor driver for the left motor
-const int BIN2 = 9;           //control pin 2 on the motor driver for the left motor
-const int BIN1 = 8;           //control pin 1 on the motor driver for the left motor
-
-
-/*distance variables
-const int trigPin = 6;
-const int echoPin = 5;
-*/
+const int BIN2 = 8;           //control pin 2 on the motor driver for the left motor
+const int BIN1 = 9;           //control pin 1 on the motor driver for the left motor
 
 int switchPin = 7;             //switch to turn the robot on and off
 int bumpPin = 2;                //pin connected to bump switch
 
-//float distance = 0;            //variable to store the distance measured by the distance sensor
-
 //robot behaviour variables
-int backupTime = 2000;           //amount of time that the robot will back up when it senses an object
-int turnTime = 2000;             //amount that the robot will turn once it has backed up
+int backupTime = 500;           //amount of time that the robot will back up when it senses an object
+int turnTime = 500;             //amount that the robot will turn once it has backed up
 
 /********************************************************************************/
 void setup()
 {
- /*
- pinMode(trigPin, OUTPUT);       //this pin will send ultrasonic pulses out from the distance sensor
-  pinMode(echoPin, INPUT);        //this pin will sense when the pulses reflect back to the distance sensor
-*/
-
+ 
   pinMode(switchPin, INPUT_PULLUP);   //set this as a pullup to sense whether the switch is flipped
   pinMode(bumpPin, INPUT_PULLUP);   //set this as a pullup to sense whether the bump switch is triggered
 
@@ -53,14 +41,6 @@ void setup()
 /********************************************************************************/
 void loop()
 {
-  /*DETECT THE DISTANCE READ BY THE DISTANCE SENSOR
-  distance = getDistance();
-
-  Serial.print("Distance: ");
-  Serial.print(distance);
-  Serial.println(" in");              // print the units
-*/
-
   if(digitalRead(switchPin) == LOW){  //if the on switch is flipped
 
     if(digitalRead(bumpPin) ==  LOW){                //if bump switch hits object goes low
@@ -71,8 +51,8 @@ void loop()
       delay(1000);
 
       //back up
-      rightMotor(-200);
-      leftMotor(-200);
+      rightMotor(-150);
+      leftMotor(-150);
       delay(backupTime);
 
       //stop for a moment
@@ -81,8 +61,8 @@ void loop()
       delay(1000);
       
       //turn away from obsticle 
-      rightMotor(200);
-      leftMotor(-200);    
+      rightMotor(150);
+      leftMotor(-150);    
       delay(turnTime);
 
       //stop for a moment
@@ -91,8 +71,8 @@ void loop()
       delay(1000);
 
     }else{                         //if no obstacle is detected drive forward
-      rightMotor(200);
-      leftMotor(212);
+      rightMotor(150);
+      leftMotor(150);
     }
   } else{                         //if the switch is off then stop
 
@@ -146,24 +126,5 @@ void leftMotor(int motorSpeed)                        //function for driving the
   analogWrite(PWMB, abs(motorSpeed));                 //now that the motor direction is set, drive it at the entered speed
 }
 
-/********************************************************************************/
-/*RETURNS THE DISTANCE MEASURED BY THE HC-SR04 DISTANCE SENSOR
-float getDistance()
-{
-  float echoTime;                   //variable to store the time it takes for a ping to bounce off an object
-  float calcualtedDistance;         //variable to store the distance calculated from the echo time
 
-  //send out an ultrasonic pulse that's 10ms long
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10); 
-  digitalWrite(trigPin, LOW);
-
-  echoTime = pulseIn(echoPin, HIGH);      //use the pulsein command to see how long it takes for the
-                                          //pulse to bounce back to the sensor
-
-  calcualtedDistance = echoTime / 148.0;  //calculate the distance of the object that reflected the pulse (half the bounce time multiplied by the speed of sound)
-
-  return calcualtedDistance;              //send back the distance that was calculated
-}
-*/
 
